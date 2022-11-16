@@ -1,32 +1,40 @@
 #include "mouvement.h"
+#include "mipp.h"
 
-void initialisation(uint8**I, uint8**V, uint8**M,int nrl, int nrh, int ncl, int nch){
+void initialisation_SIMD(uint8**I, uint8**V, uint8**M,int nrl, int nrh, int ncl, int nch){
+
+	
+
 	for(uint16_t i = nrl; i <=nrh; i++){
-		for(uint16_t j = ncl; j <=nch; j++){
-			M[i][j] = I[i][j];
-			V[i][j] = VMIN;
+		for(uint16_t j = ncl; j <=nch; j+=mipp::N<int8_t>()){
+			mipp::Reg<int8_t> Reg_M = (int8_t*)&I[i][j];
+			Reg_M.store((int8_t*)&M[i][j]);
 		}
 	}
+	set_ui8matrix(V, nrl, nrh, ncl, nch, VMIN);
 }
 
-uint8** sigma_delta(uint8**I_t, uint8**V_t, uint8**M_t,uint8**V_t_1, uint8**M_t_1, int nrl, int nrh, int ncl, int nch){
+uint8** sigma_delta_SIMD(uint8**I_t, uint8**V_t, uint8**M_t,uint8**V_t_1, uint8**M_t_1, int nrl, int nrh, int ncl, int nch){
 
 	uint8** O_t = ui8matrix(nrl, nrh, ncl, nch);
 	uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
+
+	mipp::Reg<int8_t>Reg_un = 1;  
+	mipp::Reg<int8_t>Reg_zero = (int8_t)0;  
+
 
 	zero_ui8matrix(O_t, nrl, nrh, ncl, nch);
 	zero_ui8matrix(E_t, nrl, nrh, ncl, nch);
 
 	//Etape 1 : Estimation Mt
 	for(uint16_t i = nrl; i <=nrh; i++){
-		for(uint16_t j = ncl; j <=nch; j++){
-			if(M_t_1[i][j] < I_t[i][j])
-				M_t[i][j] = M_t_1[i][j] + 1;
-			else if(M_t_1[i][j] > I_t[i][j])
-				M_t[i][j] = M_t_1[i][j] - 1;
-			else
-				M_t[i][j] = M_t_1[i][j];
-			}
+		for(uint16_t j = ncl; j <=nch; j+=mipp::N<int8_t>()){
+			mipp::Reg<int8_t> Reg_M_t_1 = (int8_t*)&M_t_1[i][j];
+			mipp::Reg<int8_t> Reg_I_t = (int8_t*)&I_t[i][j];
+         	mipp::Reg<int8_t> Reg_M_t = mipp::blend(Reg_M_t_1 + Reg_un, Reg_zero, Reg_M_t_1 < Reg_I_t);
+         	Reg_M_t= mipp::blend(Reg_M_t_1 - Reg_un, Reg_M_t_1, Reg_M_t_1 > Reg_I_t);
+         	Reg_M_t.store((int8_t*)&M_t[i][j]);
+		}
 	}
 	//Etape 2 Traitement des différences
 	for(uint16_t i = nrl; i <=nrh; i++){
