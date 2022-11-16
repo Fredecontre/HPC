@@ -152,7 +152,12 @@ uint8** erosion(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 	}
 	for(uint16_t i = nrl + 1; i < nrh; i++){
 		for(uint16_t j = ncl + 1; j < nch; j++){
-			for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
+			if(E_t[i-1][j-1] == 0 || E_t[i-1][j] == 0 ||E_t[i-1][j+1] == 0 ||E_t[i][j-1] == 0 ||E_t[i][j] == 0 ||E_t[i][j+1] == 0 ||E_t[i+1][j-1] == 0 ||E_t[i+1][j] == 0 ||E_t[i+1][j+1] == 0 )
+				E_t_bis[i][j] = 0;
+			else{
+				E_t_bis[i][j] = E_t[i][j];
+			}
+			/*for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
 				for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
 					if(E_t[i_temp][j_temp] == 0){
 						//&& j_temp != j && i_temp != i){
@@ -168,7 +173,7 @@ uint8** erosion(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 					flag_break = 0;
 					break;
 				}
-			}
+			}*/
 		}
 	}
 	return E_t_bis;
@@ -301,7 +306,10 @@ uint8** dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 	}
 	for(uint16_t i = nrl +1; i < nrh; i++){
 		for(uint16_t j = ncl + 1; j < nch; j++){
-			for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
+			if(E_t[i-1][j-1] == 255 || E_t[i-1][j] == 255 ||E_t[i-1][j+1] == 255 ||E_t[i][j-1] == 255 ||E_t[i][j] == 255 ||E_t[i][j+1] == 255 ||E_t[i+1][j-1] == 255 ||E_t[i+1][j] == 255 ||E_t[i+1][j+1] == 255 )
+				E_t_bis[i][j] = 255;
+		
+			/*for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
 				for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
 					if(E_t[i_temp][j_temp] == 255 ){
 						//&& j_temp != j && i_temp != i){
@@ -314,7 +322,7 @@ uint8** dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 					flag_break = 0;
 					break;
 				}
-			}
+			}*/
 		}
 	}
 	return E_t_bis;
