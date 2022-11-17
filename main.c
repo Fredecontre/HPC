@@ -15,19 +15,22 @@
 int main(){
 
 	int nrl, nrh, ncl, nch;
-	char nom_image[250] = "/home/fredecontre/Bureau/HPC/Projet/HPC/car3/car_3";
+	char nom_image[250] = "car3/car_3";
+	char nom_image_0[250] = "car3/car_3000.pgm";
 	//char nom_image[250] = "/home/rossi/Documents/HPC_Projet/car3/car_3";
 	char indice_i[16];
 	char indice_i_temp[16];
 	char nom_output[16] = "output";
+	char nom_output_0[16] = "output000.pgm";
 	double time_spent = 0.0;
 	clock_t begin = clock();
 
-	uint8** I_t = LoadPGM_ui8matrix("/home/fredecontre/Bureau/HPC/Projet/HPC/car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
+	uint8** I_t = LoadPGM_ui8matrix(nom_image_0, &nrl, &nrh, &ncl, &nch);
 	//uint8** I_t = LoadPGM_ui8matrix("/home/rossi/Documents/HPC_Projet/car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
 
 	uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
 	zero_ui8matrix(E_t, nrl, nrh, ncl, nch);
+
 
 	uint8** M_t_1 = ui8matrix(nrl, nrh, ncl, nch);
 	zero_ui8matrix(M_t_1, nrl, nrh, ncl, nch);
@@ -52,7 +55,7 @@ int main(){
 	//E_t =  erosion_dilatation(E_t,nrl, nrh, ncl, nch);
 	E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
 	E_t =  erosion(E_t,nrl, nrh, ncl, nch);
-	SavePGM_ui8matrix(E_t, nrl, nrh, ncl, nch, "output000.pgm");
+	SavePGM_ui8matrix(E_t, nrl, nrh, ncl, nch, nom_output_0);
 
 	for(uint16_t i = 1; i < 200 ; i++){
 		memset(indice_i,0,16);
@@ -61,7 +64,7 @@ int main(){
 		memset(nom_output,0,16);
 
 		strcpy(nom_output,"output");
-		strcpy(nom_image,"/home/fredecontre/Bureau/HPC/Projet/HPC/car3/car_3");
+		strcpy(nom_image,"car3/car_3");
 		//strcpy(nom_image,"/home/rossi/Documents/HPC_Projet/car3/car_3");
 		
 		if(i < 10){
@@ -87,7 +90,13 @@ int main(){
 		I_t = LoadPGM_ui8matrix(nom_image, &nrl, &nrh, &ncl, &nch);
 		//E_t = sigma_delta(I_t, V_t, M_t,V_t_1, M_t_1, nrl,  nrh,  ncl, nch);
 		E_t = sigma_delta_SIMD(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
-		
+
+		/*for(uint16_t i = nrl ; i <=nrh; i++){
+			for(uint16_t j = ncl ; j <= nch; j++){
+				printf("%d ",E_t[i][j]);
+			}
+			printf("\n");
+		}*/
 		E_t =  erosion(E_t,nrl, nrh, ncl, nch);
 		E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
 		//E_t =  erosion_dilatation(E_t,nrl, nrh, ncl, nch);

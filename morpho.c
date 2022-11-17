@@ -150,32 +150,60 @@ uint8** erosion(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 			}
 		}
 	}
+	//Rotation de variables
+	int8_t p1 = E_t[nrl][ncl],
+	p2 = E_t[nrl][ncl+1],
+	p3 = E_t[nrl][ncl+2],
+	p4 = E_t[nrl+1][ncl+2],
+	p5 = E_t[nrl+2][ncl+2],
+	p6 = E_t[nrl+2][ncl+1],
+	p7 = E_t[nrl+2][ncl],
+	p8 = E_t[nrl+1][ncl],
+	p_curr = E_t[nrl+1][ncl+1];
+
 	for(uint16_t i = nrl + 1; i < nrh; i++){
+		for(uint16_t j = ncl + 1; j < nch; j++){
+			p3 = E_t[i-1][j+1]; //Pixel haut droite
+			p4 = E_t[i][j+1]; //Pixel milieu droite
+			p5 = E_t[i+1][j+1]; //Pixel bas droite
+
+			if(p1 == 0 || p2 == 0 ||p3 == 0 ||p4 == 0 ||p5 == 0 ||p6 == 0 ||p7== 0 ||p8== 0 ||p_curr== 0 ){
+				E_t_bis[i][j] = 0;
+			}
+			else{
+				E_t_bis[i][j]= E_t[i][j];
+			}
+			
+
+			//Rotation
+			p1 = p2;
+			p8 = p_curr;
+			p7 = p6;
+			p2 = p3;
+			p_curr = p4;
+			p6 = p5;
+		}
+		//Rotation de variables nouvelle ligne
+		p1 = E_t[i-1][ncl];
+		p2 = E_t[i-1][ncl+1];
+		p3 = E_t[i-1][ncl+2];
+		p4 = E_t[i][ncl+2];
+		p5 = E_t[i+1][ncl+2];
+		p6 = E_t[i+1][ncl+1];
+		p7 = E_t[i+1][ncl];
+		p8 = E_t[i][ncl];
+		p_curr = E_t[i][ncl+1];
+	}
+	/*for(uint16_t i = nrl + 1; i < nrh; i++){
 		for(uint16_t j = ncl + 1; j < nch; j++){
 			if(E_t[i-1][j-1] == 0 || E_t[i-1][j] == 0 ||E_t[i-1][j+1] == 0 ||E_t[i][j-1] == 0 ||E_t[i][j] == 0 ||E_t[i][j+1] == 0 ||E_t[i+1][j-1] == 0 ||E_t[i+1][j] == 0 ||E_t[i+1][j+1] == 0 )
 				E_t_bis[i][j] = 0;
 			else{
 				E_t_bis[i][j] = E_t[i][j];
 			}
-			/*for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-				for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						//&& j_temp != j && i_temp != i){
-						flag_break = 1;
-						E_t_bis[i][j] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i][j] = E_t[i][j];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}*/
+	
 		}
-	}
+	}*/
 	return E_t_bis;
 }
 
@@ -261,7 +289,7 @@ uint8** dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 		for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
 			for(uint16_t i_temp = nrl; i_temp <= nrl + 1; i_temp++){
 				if(E_t[i_temp][j_temp] == 255 && j_temp != j && i_temp != nrl){
-					E_t_bis[nrl][j] = 255;				
+					E_t[nrl][j] = 255;				
 					flag_break = 1;
 					break;
 				}
@@ -277,7 +305,7 @@ uint8** dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 		for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
 			for(uint16_t j_temp = nch - 1; j_temp <= nch; j_temp++){
 				if(E_t[i_temp][j_temp] == 255 && j_temp != nch && i_temp != i){
-					E_t_bis[i][nch] = 255;				
+					E_t[i][nch] = 255;				
 					flag_break = 1;
 					break;
 				}
@@ -304,28 +332,56 @@ uint8** dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 			}
 		}
 	}
-	for(uint16_t i = nrl +1; i < nrh; i++){
+	//Rotation de variables
+	int8_t p1 = E_t[nrl][ncl],
+	p2 = E_t[nrl][ncl+1],
+	p3 = E_t[nrl][ncl+2],
+	p4 = E_t[nrl+1][ncl+2],
+	p5 = E_t[nrl+2][ncl+2],
+	p6 = E_t[nrl+2][ncl+1],
+	p7 = E_t[nrl+2][ncl],
+	p8 = E_t[nrl+1][ncl],
+	p_curr = E_t[nrl+1][ncl+1];
+
+	for(uint16_t i = nrl + 1; i < nrh; i++){
+		for(uint16_t j = ncl + 1; j < nch; j++){
+			p3 = E_t[i-1][j+1]; //Pixel haut droite
+			p4 = E_t[i][j+1]; //Pixel milieu droite
+			p5 = E_t[i+1][j+1]; //Pixel bas droite
+
+			if(p1 == 255 || p2 == 255 ||p3 == 255 ||p4 == 255 ||p5 == 255 ||p6 == 255 ||p7== 255 ||p8== 255 ||p_curr== 255 ){
+				E_t[i][j] = 255;
+			}
+			/*else{
+				E_t_bis[i][j] = E_t[i][j];
+			}*/
+
+			//Rotation
+			p1 = p2;
+			p8 = p_curr;
+			p7 = p6;
+			p2 = p3;
+			p_curr = p4;
+			p6 = p5;
+		}
+		//Rotation de variables nouvelle ligne
+		p1 = E_t[i-1][ncl];
+		p2 = E_t[i-1][ncl+1];
+		p3 = E_t[i-1][ncl+2];
+		p4 = E_t[i][ncl+2];
+		p5 = E_t[i+1][ncl+2];
+		p6 = E_t[i+1][ncl+1];
+		p7 = E_t[i+1][ncl];
+		p8 = E_t[i][ncl];
+		p_curr = E_t[i][ncl+1];
+	}
+	/*for(uint16_t i = nrl +1; i < nrh; i++){
 		for(uint16_t j = ncl + 1; j < nch; j++){
 			if(E_t[i-1][j-1] == 255 || E_t[i-1][j] == 255 ||E_t[i-1][j+1] == 255 ||E_t[i][j-1] == 255 ||E_t[i][j] == 255 ||E_t[i][j+1] == 255 ||E_t[i+1][j-1] == 255 ||E_t[i+1][j] == 255 ||E_t[i+1][j+1] == 255 )
 				E_t_bis[i][j] = 255;
-		
-			/*for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-				for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
-					if(E_t[i_temp][j_temp] == 255 ){
-						//&& j_temp != j && i_temp != i){
-						flag_break = 1;
-						E_t_bis[i][j] = 255;
-						break;
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}*/
 		}
-	}
-	return E_t_bis;
+	}*/
+	return E_t;
 }
 
 
