@@ -1,14 +1,14 @@
-projet: aleatoire.o ecosys.o principal.o
-	gcc aleatoire.o ecosys.o  principal.o -o projet
-	
-principal.o: principal.c aleatoire.h ecosys.h
-	gcc -c principal.c
-	
-ecosys.o:	ecosys.h ecosys.c
-	gcc -c ecosys.c
 
-aleatoire.o: aleatoire.h aleatoire.c
-	gcc -c aleatoire.c
-	
+default: test
+
+test: test.c mouvement.c morpho.c
+	g++ -o test test.c mouvement.c morpho.c -Inrc2-master/include/ -Lnrc2-master/build/lib/ -IMIPP-master/src -lnrc
+
+test_SIMD: test_SIMD.c mouvement_SIMD.c morpho_SIMD.c
+	g++ -o test_SIMD test_SIMD.c mouvement_SIMD.c morpho_SIMD.c -Inrc2-master/include/ -Lnrc2-master/build/lib/ -IMIPP-master/src -lnrc
+
 clean:
-	rm *.o
+	-rm -f test
+	-rm -f test_SIMD
+	-rm -f *.pgm
+	-rm -f *.o
