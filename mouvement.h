@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "nrc2.h"
+#include <mipp.h>
 
 #define VMIN 1
 #define VMAX 254

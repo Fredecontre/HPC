@@ -3,151 +3,59 @@ int flag_break;
 
 uint8** erosion(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 	
-	uint8**E_t_bis=ui8matrix(nrl, nrh, ncl, nch);
+	uint8**E_t_bis = ui8matrix(nrl, nrh, ncl, nch);
 	zero_ui8matrix(E_t_bis, nrl, nrh, ncl, nch);
 
 	//Coin haut gauche
-	for(uint16_t i_temp = nrl; i_temp <= nrl + 1; i_temp++){
-		for(uint16_t j_temp = ncl; j_temp <= ncl + 1; j_temp++){
-			if(E_t[i_temp][j_temp] == 0 && j_temp != ncl && i_temp != nrl){
-				E_t_bis[nrl][ncl] = 0;				
-				flag_break = 1;
-				break;
-			}
-			else{
-				E_t_bis[nrl][ncl] = E_t[nrl][ncl];
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrl][ncl] == 0 || E_t[nrl+1][ncl] == 0 || E_t[nrl][ncl+1] == 0 || E_t[nrl+1][ncl+1] == 0)
+		E_t_bis[nrl][ncl] = 0;
+	else
+		E_t_bis[nrl][ncl] = E_t[nrl][ncl];
 	//Coin haut droite
-	for(uint16_t i_temp = nrl; i_temp <= nrl + 1; i_temp++){
-		for(uint16_t j_temp = nch - 1; j_temp <= nch; j_temp++){
-			if(E_t[i_temp][j_temp] == 0 && j_temp != nch && i_temp != nrl){
-				E_t_bis[nrl][nch] = 0;				
-				flag_break = 1;
-				break;
-			}
-			else{
-				E_t_bis[nrl][nch] = E_t[nrl][nch];
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrl][nch] == 0 || E_t[nrl+1][nch] == 0 || E_t[nrl][nch-1] == 0 || E_t[nrl+1][nch-1] == 0)
+		E_t_bis[nrl][nch] = 0;
+	else
+		E_t_bis[nrl][nch] = E_t[nrl][nch];
 	//Coin bas droite
-	for(uint16_t i_temp = nrh-1 ; i_temp <= nrh; i_temp++){
-		for(uint16_t j_temp = nch-1 ; j_temp <= nch; j_temp++){
-			if(E_t[i_temp][j_temp] == 0 && j_temp != nch && i_temp != nrh){
-				E_t_bis[nrh][nch] = 0;				
-				flag_break = 1;
-				break;
-			}
-			else{
-				E_t_bis[nrh][nch] = E_t[nrh][nch];
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrh][nch] == 0 || E_t[nrh-1][nch] == 0 || E_t[nrh][nch-1] == 0 || E_t[nrh-1][nch-1] == 0)
+		E_t_bis[nrh][nch] = 0;
+	else
+		E_t_bis[nrh][nch] = E_t[nrh][nch];
 	//Coin bas gauche
-	for(uint16_t i_temp = nrh - 1; i_temp <= nrh; i_temp++){
-		for(uint16_t j_temp = ncl; j_temp <= ncl + 1; j_temp++){
-			if(E_t[i_temp][j_temp] == 0 && j_temp != ncl && i_temp != nrh){
-				E_t_bis[nrh][ncl] = 0;				
-				flag_break = 1;
-				break;
-			}
-			else{
-				E_t_bis[nrh][ncl] = E_t[nrh][ncl];
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrh][ncl] == 0 || E_t[nrh-1][ncl] == 0 || E_t[nrh-1][ncl+1] == 0 || E_t[nrh][ncl+1] == 0)
+		E_t_bis[nrh][ncl] = 0;
+	else
+		E_t_bis[nrh][ncl] = E_t[nrh][ncl];
 	//Bord gauche
 	for(uint16_t i = nrl + 1; i < nrh; i++){
-		for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-			for(uint16_t j_temp = ncl; j_temp <= ncl + 1; j_temp++){
-				if(E_t[i_temp][j_temp] == 0 && j_temp != ncl && i_temp != i){
-					E_t_bis[i][ncl] = 0;				
-					flag_break = 1;
-					break;
-				}
-				else{
-					E_t_bis[i][ncl] = E_t[i][ncl];
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
+		if(E_t[i-1][ncl] == 0 || E_t[i-1][ncl+1] == 0 || E_t[i][ncl] == 0 || E_t[i][ncl+1] == 0 || E_t[i+1][ncl] == 0 || E_t[i+1][ncl+1] == 0)
+			E_t_bis[i][ncl] = 0;
+		else{
+			E_t_bis[i][ncl] = E_t[i][ncl];
 		}
 	}
 	//Bord haut
 	for(uint16_t j = ncl + 1; j < nch; j++){
-		for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
-			for(uint16_t i_temp = nrl; i_temp <= nrl + 1; i_temp++){
-				if(E_t[i_temp][j_temp] == 0 && j_temp != j && i_temp != nrl){
-					E_t_bis[nrl][j] = 0;				
-					flag_break = 1;
-					break;
-				}
-				else{
-					E_t_bis[nrl][j] = E_t[nrl][j];
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
+		if(E_t[nrl][j-1] == 0 || E_t[nrl][j] == 0 || E_t[nrl][j+1] == 0 || E_t[nrl+1][j-1] == 0 || E_t[nrl+1][j] == 0 || E_t[nrl+1][j+1] == 0)
+			E_t_bis[nrl][j] = 0;
+		else{
+			E_t_bis[nrl][j] = E_t[nrl][j];
 		}
 	}
 	//Bord droit
 	for(uint16_t i = nrl + 1; i < nrh; i++){
-		for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-			for(uint16_t j_temp = nch - 1; j_temp <= nch; j_temp++){
-				if(E_t[i_temp][j_temp] == 0 && j_temp != nch && i_temp != i){
-					E_t_bis[i][nch] = 0;				
-					flag_break = 1;
-					break;
-				}
-				else{
-					E_t_bis[i][nch] = E_t[i][nch];
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
+		if(E_t[i-1][nch-1] == 0 || E_t[i-1][nch] == 0 || E_t[i][nch-1] == 0 || E_t[i][nch] == 0 || E_t[i+1][nch-1] == 0 || E_t[i+1][nch] == 0)
+			E_t_bis[i][nch] = 0;
+		else{
+			E_t_bis[i][nch] = E_t[i][nch];
 		}
 	}
 	//Bord bas
 	for(uint16_t j = ncl + 1; j < nch; j++){
-		for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
-			for(uint16_t i_temp = nrh - 1; i_temp <= nrh; i_temp++){
-				if(E_t[i_temp][j_temp] == 0 && j_temp != j && i_temp != nrh){
-					E_t_bis[nrh][j] = 0;				
-					flag_break = 1;
-					break;
-				}
-				else{
-					E_t_bis[nrh][j] = E_t[nrh][j];
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
+		if(E_t[nrh][j-1] == 0 || E_t[nrh][j] == 0 || E_t[nrh][j+1] == 0 || E_t[nrh-1][j-1] == 0 || E_t[nrh-1][j] == 0 || E_t[nrh-1][j+1] == 0)
+			E_t_bis[nrh][j] = 0;
+		else{
+			E_t_bis[nrh][j] = E_t[nrh][j];
 		}
 	}
 	//Rotation de variables
@@ -194,143 +102,42 @@ uint8** erosion(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 		p8 = E_t[i][ncl];
 		p_curr = E_t[i][ncl+1];
 	}
-	/*for(uint16_t i = nrl + 1; i < nrh; i++){
-		for(uint16_t j = ncl + 1; j < nch; j++){
-			if(E_t[i-1][j-1] == 0 || E_t[i-1][j] == 0 ||E_t[i-1][j+1] == 0 ||E_t[i][j-1] == 0 ||E_t[i][j] == 0 ||E_t[i][j+1] == 0 ||E_t[i+1][j-1] == 0 ||E_t[i+1][j] == 0 ||E_t[i+1][j+1] == 0 )
-				E_t_bis[i][j] = 0;
-			else{
-				E_t_bis[i][j] = E_t[i][j];
-			}
-	
-		}
-	}*/
 	return E_t_bis;
 }
 
 uint8** dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 
-	uint8**E_t_bis=ui8matrix(nrl, nrh, ncl, nch);
-	zero_ui8matrix(E_t_bis, nrl, nrh, ncl, nch);
-
 	//Coin haut gauche
-	for(uint16_t i_temp = nrl; i_temp <= nrl + 1; i_temp++){
-		for(uint16_t j_temp = ncl; j_temp <= ncl + 1; j_temp++){
-			if(E_t[i_temp][j_temp] == 255 && j_temp != ncl && i_temp != nrl){
-				E_t_bis[nrl][ncl] = 255;				
-				flag_break = 1;
-				break;
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrl][ncl] == 255 || E_t[nrl+1][ncl] == 255 || E_t[nrl][ncl+1] == 255 || E_t[nrl+1][ncl+1] == 255)
+		E_t[nrl][ncl] = 255;
 	//Coin haut droite
-	for(uint16_t i_temp = nrl; i_temp <= nrl + 1; i_temp++){
-		for(uint16_t j_temp = nch - 1; j_temp <= nch; j_temp++){
-			if(E_t[i_temp][j_temp] == 255 && j_temp != nch && i_temp != nrl){
-				E_t_bis[nrl][nch] = 255;				
-				flag_break = 1;
-				break;
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrl][nch] == 255 || E_t[nrl+1][nch] == 255 || E_t[nrl][nch-1] == 255 || E_t[nrl+1][nch-1] == 255)
+		E_t[nrl][nch] = 255;
 	//Coin bas droite
-	for(uint16_t i_temp = nrh - 1 ; i_temp <= nrh; i_temp++){
-		for(uint16_t j_temp = nch - 1; j_temp <= nch; j_temp++){
-			if(E_t[i_temp][j_temp] == 255 && j_temp != nch && i_temp != nrh){
-				E_t_bis[nrh][nch] = 255;				
-				flag_break = 1;
-				break;
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrh][nch] == 255 || E_t[nrh-1][nch] == 255 || E_t[nrh][nch-1] == 255 || E_t[nrh-1][nch-1] == 255)
+		E_t[nrh][nch] = 255;
 	//Coin bas gauche
-	for(uint16_t i_temp = nrh - 1; i_temp <= nrh; i_temp++){
-		for(uint16_t j_temp = ncl; j_temp <= ncl + 1; j_temp++){
-			if(E_t[i_temp][j_temp] == 255 && j_temp != ncl && i_temp != nrh){
-				E_t_bis[nrh][ncl] = 255;				
-				flag_break = 1;
-				break;
-			}
-		}
-		if(flag_break){
-			flag_break = 0;
-			break;
-		}
-	}
+	if(E_t[nrh][ncl] == 255 || E_t[nrh-1][ncl] == 255 || E_t[nrh-1][ncl+1] == 255 || E_t[nrh][ncl+1] == 255)
+		E_t[nrh][ncl] = 255;
 	//Bord gauche
 	for(uint16_t i = nrl + 1; i < nrh; i++){
-		for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-			for(uint16_t j_temp = ncl; j_temp <= ncl + 1; j_temp++){
-				if(E_t[i_temp][j_temp] == 255 && j_temp != ncl && i_temp != i){
-					E_t[i][ncl] = 255;				
-					flag_break = 1;
-					break;
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
-		}
+		if(E_t[i-1][ncl] == 255 || E_t[i-1][ncl+1] == 255 || E_t[i][ncl] == 255 || E_t[i][ncl+1] == 255 || E_t[i+1][ncl] == 255 || E_t[i+1][ncl+1] == 255)
+			E_t[i][ncl] = 255;
 	}
 	//Bord haut
 	for(uint16_t j = ncl + 1; j < nch; j++){
-		for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
-			for(uint16_t i_temp = nrl; i_temp <= nrl + 1; i_temp++){
-				if(E_t[i_temp][j_temp] == 255 && j_temp != j && i_temp != nrl){
-					E_t[nrl][j] = 255;				
-					flag_break = 1;
-					break;
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
-		}
+		if(E_t[nrl][j-1] == 255 || E_t[nrl][j] == 255 || E_t[nrl][j+1] == 255 || E_t[nrl+1][j-1] == 255 || E_t[nrl+1][j] == 255 || E_t[nrl+1][j+1] == 255)
+			E_t[nrl][j] = 255;
 	}
 	//Bord droit
 	for(uint16_t i = nrl + 1; i < nrh; i++){
-		for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-			for(uint16_t j_temp = nch - 1; j_temp <= nch; j_temp++){
-				if(E_t[i_temp][j_temp] == 255 && j_temp != nch && i_temp != i){
-					E_t[i][nch] = 255;				
-					flag_break = 1;
-					break;
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
-		}
+		if(E_t[i-1][nch-1] == 255 || E_t[i-1][nch] == 255 || E_t[i][nch-1] == 255 || E_t[i][nch] == 255 || E_t[i+1][nch-1] == 255 || E_t[i+1][nch] == 255)
+			E_t[i][nch] = 255;
 	}
 	//Bord bas
 	for(uint16_t j = ncl + 1; j < nch; j++){
-		for(uint16_t j_temp = j - 1; j_temp <= j + 1; j_temp++){
-			for(uint16_t i_temp = nrh - 1; i_temp <= nrh; i_temp++){
-				if(E_t[i_temp][j_temp] == 255 && j_temp != j && i_temp != nrh){
-					E_t_bis[nrh][j] = 255;				
-					flag_break = 1;
-					break;
-				}
-			}
-			if(flag_break){
-				flag_break = 0;
-				break;
-			}
-		}
+		if(E_t[nrh][j-1] == 255 || E_t[nrh][j] == 255 || E_t[nrh][j+1] == 255 || E_t[nrh-1][j-1] == 255 || E_t[nrh-1][j] == 255 || E_t[nrh-1][j+1] == 255)
+				E_t[nrh][j] = 255;
 	}
 	//Rotation de variables
 	int8_t p1 = E_t[nrl][ncl],
@@ -375,12 +182,6 @@ uint8** dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 		p8 = E_t[i][ncl];
 		p_curr = E_t[i][ncl+1];
 	}
-	/*for(uint16_t i = nrl +1; i < nrh; i++){
-		for(uint16_t j = ncl + 1; j < nch; j++){
-			if(E_t[i-1][j-1] == 255 || E_t[i-1][j] == 255 ||E_t[i-1][j+1] == 255 ||E_t[i][j-1] == 255 ||E_t[i][j] == 255 ||E_t[i][j+1] == 255 ||E_t[i+1][j-1] == 255 ||E_t[i+1][j] == 255 ||E_t[i+1][j+1] == 255 )
-				E_t_bis[i][j] = 255;
-		}
-	}*/
 	return E_t;
 }
 
