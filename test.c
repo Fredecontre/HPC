@@ -11,6 +11,7 @@
 
 void init_tabs(uint8*** E_t_bis,uint8*** I_t_bis,uint8*** V_t_bis,uint8*** M_t_bis,uint8*** V_t_1_bis,uint8*** M_t_1_bis,int nrl, int nrh, int ncl, int nch){
 		E_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+		//uint8**tab_alloc;
 
 		for(int k = 0 ; k < NUM_THREADS ; k++){
 			E_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
@@ -57,7 +58,7 @@ int main(){
 	uint8*** V_t_1_bis;
 	uint8*** M_t_1_bis;
 	uint8*** I_t_bis;
-	init_tabs(E_t_bis,I_t_bis,V_t_bis,M_t_bis,V_t_1_bis,M_t_1_bis,nrl, nrh, ncl, nch);
+	
 
 
 	//Création threads
@@ -65,10 +66,35 @@ int main(){
 	
 
 	uint8** I_t = LoadPGM_ui8matrix(nom_image_0, &nrl, &nrh, &ncl, &nch);
+	//init_tabs(E_t_bis,I_t_bis,V_t_bis,M_t_bis,V_t_1_bis,M_t_1_bis,nrl, nrh, ncl, nch);
+
+	E_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	I_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	V_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	M_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	V_t_1_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	M_t_1_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+
+	for(int k = 0 ; k < NUM_THREADS ; k++){
+			E_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+			I_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+			V_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+			M_t_1_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+			V_t_1_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+			M_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+
+			zero_ui8matrix(E_t_bis[k], nrl, nrh, ncl, nch);
+			zero_ui8matrix(V_t_bis[k], nrl, nrh, ncl, nch);
+			zero_ui8matrix(M_t_bis[k], nrl, nrh, ncl, nch);
+			zero_ui8matrix(I_t_bis[k], nrl, nrh, ncl, nch);
+			zero_ui8matrix(V_t_1_bis[k], nrl, nrh, ncl, nch);
+			zero_ui8matrix(M_t_1_bis[k], nrl, nrh, ncl, nch);
+
+		}
+
 
 	uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
 	zero_ui8matrix(E_t, nrl, nrh, ncl, nch);
-
 
 	uint8** M_t_1 = ui8matrix(nrl, nrh, ncl, nch);
 	zero_ui8matrix(M_t_1, nrl, nrh, ncl, nch);
