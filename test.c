@@ -10,25 +10,29 @@
 #define NUM_THREADS 4
 
 void init_tabs(uint8*** E_t_bis,uint8*** I_t_bis,uint8*** V_t_bis,uint8*** M_t_bis,uint8*** V_t_1_bis,uint8*** M_t_1_bis,int nrl, int nrh, int ncl, int nch){
-		E_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
-		//uint8**tab_alloc;
+	E_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	I_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	V_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	M_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	V_t_1_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	M_t_1_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
 
-		for(int k = 0 ; k < NUM_THREADS ; k++){
-			E_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
-			/*I_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
-			V_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
-			M_t_1_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
-			V_t_1_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
-			M_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);*/
+	for(int k = 0 ; k < NUM_THREADS ; k++){
+		E_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+		I_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+		V_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+		M_t_1_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+		V_t_1_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
+		M_t_bis[k]=ui8matrix(nrl, nrh, ncl, nch);
 
-			zero_ui8matrix(E_t_bis[k], nrl, nrh, ncl, nch);
-			/*zero_ui8matrix(V_t_bis[k], nrl, nrh, ncl, nch);
-			zero_ui8matrix(M_t_bis[k], nrl, nrh, ncl, nch);
-			zero_ui8matrix(I_t_bis[k], nrl, nrh, ncl, nch);
-			zero_ui8matrix(V_t_1_bis[k], nrl, nrh, ncl, nch);
-			zero_ui8matrix(M_t_1_bis[k], nrl, nrh, ncl, nch);*/
+		zero_ui8matrix(E_t_bis[k], nrl, nrh, ncl, nch);
+		zero_ui8matrix(V_t_bis[k], nrl, nrh, ncl, nch);
+		zero_ui8matrix(M_t_bis[k], nrl, nrh, ncl, nch);
+		zero_ui8matrix(I_t_bis[k], nrl, nrh, ncl, nch);
+		zero_ui8matrix(V_t_1_bis[k], nrl, nrh, ncl, nch);
+		zero_ui8matrix(M_t_1_bis[k], nrl, nrh, ncl, nch);
 
-		}
+	}
 
 }
 
@@ -36,15 +40,12 @@ void init_tabs(uint8*** E_t_bis,uint8*** I_t_bis,uint8*** V_t_bis,uint8*** M_t_b
 
 // token thomas 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
 
-//COMMANDE COMPIL g++ -o main main.c mouvement.c mouvement_SIMD.c morpho_SIMD.c morpho.c -Inrc2-master/include/ -Lnrc2-master/build/lib/ -IMIPP-master/src -lnrc -g
-//COMMANDE COMPIL THOMAS gcc -o main main.c mouvement.c mouvement_SIMD.c morpho_SIMD.c morpho.c -Inrc2/include/ -Lnrc2/build/lib/ -lnrc -g
 
 int main(){
 
 	int nrl, nrh, ncl, nch;
-	char nom_image[NUM_THREADS][250] ;
+	char nom_image[NUM_THREADS][250];
 	char nom_image_0[250] = "car3/car_3000.pgm";
-	//char nom_image[250] = "/home/rossi/Documents/HPC_Projet/car3/car_3";
 	char indice_i[16];
 	char indice_i_temp[16];
 	char nom_output[NUM_THREADS][16];
@@ -68,7 +69,7 @@ int main(){
 	uint8** I_t = LoadPGM_ui8matrix(nom_image_0, &nrl, &nrh, &ncl, &nch);
 	//init_tabs(E_t_bis,I_t_bis,V_t_bis,M_t_bis,V_t_1_bis,M_t_1_bis,nrl, nrh, ncl, nch);
 
-	E_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
+	/*E_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
 	I_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
 	V_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
 	M_t_bis = (uint8***)malloc(sizeof(uint8**)*NUM_THREADS);
@@ -90,7 +91,7 @@ int main(){
 			zero_ui8matrix(V_t_1_bis[k], nrl, nrh, ncl, nch);
 			zero_ui8matrix(M_t_1_bis[k], nrl, nrh, ncl, nch);
 
-		}
+		}*/
 
 
 	uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
@@ -138,7 +139,7 @@ int main(){
 	E_t_bis[0] = E_t;
 
 
-	for(uint16_t i = 1; i < 200 ; i+NUM_THREADS){
+	for(uint16_t i = 1; i < 200 ; i+=NUM_THREADS){
 		//sprintf(nom_image,"car3/car_3%03d.pgm",i);
 		//sprintf(nom_output,"output%03d.pgm",i);
 		/*memset(indice_i,0,16);
