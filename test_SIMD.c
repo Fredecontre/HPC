@@ -54,9 +54,9 @@ int main(){
 	//E_t = sigma_delta(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
 	E_t = sigma_delta_SIMD(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
 
-	E_t =  erosion(E_t,nrl, nrh, ncl, nch);
-	E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
-	//E_t =  erosion_dilatation_SIMD(E_t,nrl, nrh, ncl, nch);
+	//E_t =  erosion(E_t,nrl, nrh, ncl, nch);
+	//E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
+	E_t =  erosion_dilatation(E_t,nrl, nrh, ncl, nch);
 	E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
 	E_t =  erosion(E_t,nrl, nrh, ncl, nch);
 	SavePGM_ui8matrix(E_t, nrl, nrh, ncl, nch, nom_output_0);
@@ -96,9 +96,9 @@ int main(){
 		E_t = sigma_delta_SIMD(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
 
 
-		E_t =  erosion(E_t,nrl, nrh, ncl, nch);
-		E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
-		//E_t =  erosion_dilatation_SIMD(E_t,nrl, nrh, ncl, nch);
+		//E_t =  erosion(E_t,nrl, nrh, ncl, nch);
+		//E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
+		E_t =  erosion_dilatation(E_t,nrl, nrh, ncl, nch);
 		E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
 		E_t =  erosion(E_t,nrl, nrh, ncl, nch);
 

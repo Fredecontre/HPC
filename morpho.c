@@ -223,6 +223,10 @@ uint8** erosion_dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 	uint8**E_t_3_3=ui8matrix(nrl, 3, ncl, 3);
 	zero_ui8matrix(E_t_3_3, nrl, 3, ncl, 3);
 
+
+	uint8**E_t_bis_2=ui8matrix(nrl, nrh, ncl, nch);
+	zero_ui8matrix(E_t_bis, nrl, nrh, ncl, nch);
+
 	//Rotation de variables
 	int8_t p1 = E_t[nrl][ncl],
 	p2 = E_t[nrl][ncl+1],
@@ -234,18 +238,50 @@ uint8** erosion_dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 	p8 = E_t[nrl+1][ncl],
 	p_curr = E_t[nrl+1][ncl+1];
 
-	for(uint16_t i = nrl + 2; i < nrh - 1; i++){
-		for(uint16_t j = ncl + 2; j < nch - 1 ; j++){
+	//Eroder premier patch 3x3 en haut à gauche
+	for(uint16_t i_temp = nrl+1; i_temp <= nrl+4; i_temp++){ 
+		for(uint16_t j_temp = ncl+1 ;j_temp <= ncl+4; j_temp++){
+			p3 = E_t[i_temp-1][j_temp+1]; //Pixel haut droite
+			p4 = E_t[i_temp][j_temp+1]; //Pixel milieu droite
+			p5 = E_t[i_temp+1][j_temp+1]; //Pixel bas droite
+			if(p1 == 0 || p2 == 0 ||p3 == 0 ||p4 == 0 ||p5 == 0 ||p6 == 0 ||p7== 0 ||p8== 0 ||p_curr== 0 ){
+				E_t_bis_2[i_temp][j_temp] = 0;
+			}
+			else{
+				E_t_bis_2[i_temp][j_temp] =E_t[i_temp][j_temp];
+			}
+
+			p1 = p2;
+			p8 = p_curr;
+			p7 = p6;
+			p2 = p3;
+			p_curr = p4;
+			p6 = p5;				
+		}
+		p1 = E_t[i_temp-1][ncl];
+		p2 = E_t[i_temp-1][ncl+1];
+		p3 = E_t[i_temp-1][ncl+2];
+		p4 = E_t[i_temp][ncl+2];
+		p5 = E_t[i_temp+1][ncl+2];
+		p6 = E_t[i_temp+1][ncl+1];
+		p7 = E_t[i_temp+1][ncl];
+		p8 = E_t[i_temp][ncl];
+		p_curr = E_t[i_temp][ncl+1];
+	}
+
+	for(uint16_t i = nrl + 4; i < nrh - 1; i++){
+		for(uint16_t j = ncl + 4; j < nch - 1 ; j++){
 			for(uint16_t i_temp = i - 1; i_temp <= i +1; i_temp++){ 
-				for(uint16_t j_temp = j - 1 ;j_temp <= j +1; j_temp++){
+				//for(uint16_t j_temp = j - 1 ;j_temp <= j +1; j_temp++){
+				uint16_t j_temp = j+1;
 					p3 = E_t[i_temp-1][j_temp+1]; //Pixel haut droite
 					p4 = E_t[i_temp][j_temp+1]; //Pixel milieu droite
 					p5 = E_t[i_temp+1][j_temp+1]; //Pixel bas droite
 					if(p1 == 0 || p2 == 0 ||p3 == 0 ||p4 == 0 ||p5 == 0 ||p6 == 0 ||p7== 0 ||p8== 0 ||p_curr== 0 ){
-						E_t_3_3[i_temp-i][j_temp-j] = 0;
+						E_t_bis_2[i_temp][j_temp] = 0;
 					}
 					else{
-						E_t_3_3[i_temp-i][j_temp-j] =E_t[i_temp][j_temp];
+						E_t_bis_2[i_temp][j_temp] =E_t[i_temp][j_temp];
 					}
 
 					p1 = p2;
@@ -255,8 +291,8 @@ uint8** erosion_dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 					p_curr = p4;
 					p6 = p5;
 						
-				}
-				p1 = E_t[i_temp-1][ncl];
+				//}
+				/*p1 = E_t[i_temp-1][ncl];
 				p2 = E_t[i_temp-1][ncl+1];
 				p3 = E_t[i_temp-1][ncl+2];
 				p4 = E_t[i_temp][ncl+2];
@@ -264,180 +300,13 @@ uint8** erosion_dilatation(uint8**E_t, int nrl, int nrh, int ncl, int nch){
 				p6 = E_t[i_temp+1][ncl+1];
 				p7 = E_t[i_temp+1][ncl];
 				p8 = E_t[i_temp][ncl];
-				p_curr = E_t[i_temp][ncl+1];
+				p_curr = E_t[i_temp][ncl+1];*/
 			}
 
-			/*for(uint16_t i_temp = i - 2; i_temp <= i ; i_temp++){ 
-				for(uint16_t j_temp = j - 2 ;j_temp <= j ; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i-1][j-1] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i-1][j-1] = E_t[i-1][j-1];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-			//PIXEL HAUT GAUCHE
-			for(uint16_t i_temp = i - 2; i_temp <= i ; i_temp++){ 
-				for(uint16_t j_temp = j - 2 ;j_temp <= j ; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i-1][j-1] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i-1][j-1] = E_t[i-1][j-1];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-			//PIXEL MILIEU GAUCHE
-			for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-				for(uint16_t j_temp = j - 2 ;j_temp <= j ; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i][j-1] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i][j-1] = E_t[i][j-1];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-			//PIXEL BAS GAUCHE
-			for(uint16_t i_temp = i ; i_temp <= i + 2; i_temp++){
-				for(uint16_t j_temp = j - 2 ;j_temp <= j ; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i+1][j-1] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i+1][j-1] = E_t[i+1][j-1];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-			//PIXEL BAS MILIEU
-			for(uint16_t i_temp = i ; i_temp <= i + 2; i_temp++){
-				for(uint16_t j_temp = j - 1 ;j_temp <= j + 1; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i+1][j] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i+1][j] = E_t[i+1][j];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-
-			//PIXEL BAS DROITE
-			for(uint16_t i_temp = i ; i_temp <= i + 2; i_temp++){
-				for(uint16_t j_temp = j; j_temp <= j + 2; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i+1][j+1] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i+1][j+1] = E_t[i+1][j+1];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-
-			//PIXEL DROITE MILIEU
-			for(uint16_t i_temp = i - 1; i_temp <= i + 1; i_temp++){
-				for(uint16_t j_temp = j; j_temp <= j + 2; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i][j+1] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i][j+1] = E_t[i][j+1];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-
-			//PIXEL DROITE HAUT
-			for(uint16_t i_temp = i - 2; i_temp <= i; i_temp++){
-				for(uint16_t j_temp = j; j_temp <= j + 2; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i-1][j+1] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i-1][j+1] = E_t[i-1][j+1];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}
-
-			//PIXEL MILIEU HAUT
-			for(uint16_t i_temp = i - 2; i_temp <= i; i_temp++){
-				for(uint16_t j_temp = j - 1 ; j_temp <= j +1; j_temp++){
-					if(E_t[i_temp][j_temp] == 0){
-						flag_break = 1;
-						E_t_bis[i-1][j] = 0;
-						break;
-					}
-					else{
-						E_t_bis[i-1][j] = E_t[i-1][j];
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}*/
 			//DILATION POINT I J
-			/*for(uint16_t i_temp = 0; i_temp <= i2; i_temp++){
-				for(uint16_t j_temp = j; j_temp <= 2; j_temp++){
-					if(E_t_3_3[i_temp][j_temp] == 255 ){
-						//&& j_temp != j && i_temp != i){
-						flag_break = 1;
-						E_t_bis[i][j] = 255;
-						break;
-					}
-				}
-				if(flag_break){
-					flag_break = 0;
-					break;
-				}
-			}*/
+			if(E_t_bis_2[i-1][j-1] == 255 || E_t_bis_2[i-1][j] == 255 || E_t_bis_2[i-1][j+1] == 255 || E_t_bis_2[i][j-1] == 255 || E_t_bis_2[i][j] == 255 || E_t_bis_2[i][j+1] == 255 || E_t_bis_2[i+1][j-1] == 255 || E_t_bis_2[i+1][j] == 255 || E_t_bis_2[i+1][j+1] == 255){
+				E_t_bis[i][j] = 255;
+			}
 
 		}
 	}
