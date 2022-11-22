@@ -97,10 +97,10 @@ uint8** sigma_delta_SIMD(uint8**I_t, uint8**V_t, uint8**M_t,uint8**V_t_1, uint8*
 	for(uint16_t i = nrl; i <=nrh; i++){
 		for(uint16_t j = ncl; j <=nch; j+=mipp::N<int16_t>()){
 		//for(uint16_t j = ncl; j <=nch; j++){
-			Reg_M_t.load((int16_t*)&M_t[i][j]);
-			Reg_I_t.load((int16_t*)&I_t[i][j]);
+			Reg_M_t.load((int16_t*)&M_t_16[i][j]);
+			Reg_I_t.load((int16_t*)&I_t_16[i][j]);
 			Reg_O_t = mipp::abs(Reg_M_t-Reg_I_t);
-			Reg_O_t.store((int16_t*)&O_t[i][j]);
+			Reg_O_t.store((int16_t*)&O_t_16[i][j]);
 
 			//O_t[i][j] = abs(M_t[i][j] - I_t[i][j]);
 		}
@@ -118,14 +118,14 @@ uint8** sigma_delta_SIMD(uint8**I_t, uint8**V_t, uint8**M_t,uint8**V_t_1, uint8*
 			V_t[i][j] = MAX(MIN(V_t[i][j],VMAX),VMIN);*/
 		
 
-			Reg_O_t = (int16_t*)&O_t[i][j];
+			Reg_O_t = (int16_t*)&O_t_16[i][j];
 
-			Reg_V_t_1 = (int16_t*)&V_t_1[i][j];
+			Reg_V_t_1 = (int16_t*)&V_t_1_16[i][j];
          	Reg_V_t = mipp::blend(Reg_V_t_1 + Reg_un, Reg_zero, Reg_V_t_1 < Reg_O_t + Reg_O_t);
          	Reg_V_t= mipp::blend(Reg_V_t_1 - Reg_un, Reg_V_t_1, Reg_V_t_1 > Reg_O_t + Reg_O_t);
 
          	Reg_V_t = mipp::max(mipp::min(Reg_V_t,Reg_VMAX),Reg_VMIN);
-         	Reg_V_t.store((int16_t*)&V_t[i][j]);
+         	Reg_V_t.store((int16_t*)&V_t_16[i][j]);
 		}
 	}
 	//Etape 4 : Estimation de Et

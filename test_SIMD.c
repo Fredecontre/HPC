@@ -45,11 +45,11 @@ int main(){
 	uint8** V_t = ui8matrix(nrl, nrh, ncl, nch);
 	zero_ui8matrix(V_t, nrl, nrh, ncl, nch);
 
-	//initialisation_SIMD(I_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
-	initialisation(I_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
+	initialisation_SIMD(I_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
+	//initialisation(I_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
 
-	E_t = sigma_delta(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
-	//E_t = sigma_delta_SIMD(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
+	//E_t = sigma_delta(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
+	E_t = sigma_delta_SIMD(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
 
 	E_t =  erosion(E_t,nrl, nrh, ncl, nch);
 	E_t =  dilatation(E_t,nrl, nrh, ncl, nch);
@@ -89,8 +89,8 @@ int main(){
 		strcat(nom_output,".pgm");
 
 		I_t = LoadPGM_ui8matrix(nom_image, &nrl, &nrh, &ncl, &nch);
-		E_t = sigma_delta(I_t, V_t, M_t,V_t_1, M_t_1, nrl,  nrh,  ncl, nch);
-		//E_t = sigma_delta_SIMD(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
+		//E_t = sigma_delta(I_t, V_t, M_t,V_t_1, M_t_1, nrl,  nrh,  ncl, nch);
+		E_t = sigma_delta_SIMD(I_t, V_t, M_t, V_t_1, M_t_1, nrl, nrh, ncl, nch);
 
 
 		E_t =  erosion(E_t,nrl, nrh, ncl, nch);
