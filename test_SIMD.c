@@ -6,8 +6,8 @@
 #include "nrc2.h"
 #include "mouvement.h"
 #include "morpho.h"
-//double time_spent = 0.0;
-//clock_t begin;
+
+extern double time_spent;
 
 // token thomas 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
 
@@ -24,8 +24,11 @@ int main(){
 	char nom_output[16] = "output";
 	char nom_output_0[16] = "output000.pgm";
 	
-	//double time_spent = 0.0;
-	//clock_t begin;
+	double time_spent2 = 0.0;
+	clock_t begin2;
+
+
+	begin2 =clock();
 
 	uint8** I_t = LoadPGM_ui8matrix(nom_image_0, &nrl, &nrh, &ncl, &nch);
 
@@ -102,9 +105,9 @@ int main(){
 		SavePGM_ui8matrix(E_t, nrl, nrh, ncl, nch, nom_output);
 
 	}
-	/*clock_t end = clock();
-	time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("The elapsed time is %f seconds", time_spent);*/
+	clock_t end2 = clock();
+	time_spent2 += (double)(end2 - begin2) / CLOCKS_PER_SEC;
+    printf("The elapsed time is %f seconds\n", time_spent2-time_spent);
 
 	return 0;
 }

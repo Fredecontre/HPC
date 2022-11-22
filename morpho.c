@@ -1,19 +1,6 @@
 #include "morpho.h"
 int flag_break;
 
-/*void* morphologies_image(void*arguments){
-
-	args_thread* args=(args_thread* )arguments;
-	int nrl=args->nrl, nrh=args->nrh, ncl=args->ncl, nch=args->nch;
-
-	args->E_t =  erosion(args->E_t,nrl, nrh, ncl, nch);
-	args->E_t =  dilatation(args->E_t,args->nrl, args->nrh, args->ncl, args->nch);
-	args->E_t =  dilatation(args->E_t,args->nrl, args->nrh, args->ncl, args->nch);
-	args->E_t =  erosion(args->E_t,args->nrl, args->nrh, args->ncl, args->nch);
-
-	return args->E_t;
-
-}*/
 
 void* morphologies_image(void*arguments){
 

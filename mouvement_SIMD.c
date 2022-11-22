@@ -1,11 +1,9 @@
 #include "mouvement.h"
 double time_spent = 0.0;
 clock_t begin, end;
-int compte  =0;
+
 
 void initialisation_SIMD(uint8**I, uint8**V, uint8**M,int nrl, int nrh, int ncl, int nch){
-
-	
 
 	for(uint16_t i = nrl; i <=nrh; i++){
 		for(uint16_t j = ncl; j <=nch; j+=mipp::N<int8_t>()){
@@ -140,9 +138,6 @@ uint8** sigma_delta_SIMD(uint8**I_t, uint8**V_t, uint8**M_t,uint8**V_t_1, uint8*
 	end = clock();
 
 	time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-
-	if(++compte == 200)
-    	printf("Temps mis pour les conversions = %f secondes", time_spent);
 
 	return E_t;
 }
